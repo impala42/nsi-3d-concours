@@ -1,12 +1,13 @@
 from math import sqrt
-from visualisateur import afficher
 
 OEUIL = (150, 5, 90)
 
 def distance(a, b):
+    """calcule la distance entre le point a et b"""
     return sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2)
 
 def fusion_points(L1: list, L2: list) -> list:
+    """fusion du tri : essayer d'enlever les copies pour accelerer le schmilblick"""
     i1 = 0
     i2 = 0
     lst = []
@@ -22,6 +23,7 @@ def fusion_points(L1: list, L2: list) -> list:
     return lst + L1[i1:] + L2[i2:]
 
 def tri_fusion_points(lst:list) -> list:
+    """Trie les points par fusion (a ameliorer pour enlever les copies)"""
     if len(lst) == 1:
         return lst
     
@@ -30,6 +32,7 @@ def tri_fusion_points(lst:list) -> list:
     return fusion_points(tri_fusion_points(lst[:moitie]), tri_fusion_points(lst[moitie:]))
 
 def mettre_dans_l_ordre(points: list) -> list:
+    """Trie les points du plus proche au plus loin."""
     # on mesure les distances
     lst = []
     for point in points:
@@ -47,6 +50,9 @@ def mettre_dans_l_ordre(points: list) -> list:
 
 
 def charger_donnee(nom_fichier: str) -> list:
+    """Charge les données du fichier nom_fichier"""
+
+    # On lit le fichier
     f = open(nom_fichier, "r")
     data_brut = f.read().split("\n")
     data = []
@@ -54,13 +60,13 @@ def charger_donnee(nom_fichier: str) -> list:
         j = ligne.split(", ")
         data.append((int(j[0]), int(j[1]), int(j[2])))
     
-    # on les met dans l'ordre
+    # on les met dans l'ordre du plus loin au plus proches
     data = mettre_dans_l_ordre(data)
     print(data)
     
     return data
 
-def bleu_vers_rouge(v):
+def bleu_vers_rouge(v: float) -> tuple:
     """
     Renvoie une couleur RGB allant du bleu (0) au rouge (100)
     """
@@ -104,8 +110,3 @@ def calculer_pos_points(points: list) -> list:
         res.append((y, z, couleur))
 
     return res
-
-
-data = charger_donnee("data.csv")
-points = calculer_pos_points(data)
-afficher(points)
