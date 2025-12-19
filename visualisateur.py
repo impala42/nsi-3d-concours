@@ -19,11 +19,14 @@ while continuer:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             continuer = False
+            
+    screen.fill((255, 255, 255))
     
     # On calcule et on affiche
     points = calculer_pos_points(data)
     for point in points:
-        pygame.draw.rect(screen, point[2], (point[0]*100, point[1], 10, 10))
+        pygame.draw.rect(screen, point[2], (point[0], point[1], 10, 10))
+        pygame.draw.rect(screen, (0, 0, 0), (point[0], point[1], 10, 10), 2)
 
     # Met à jour l'écran
     pygame.display.flip()

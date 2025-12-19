@@ -1,6 +1,6 @@
 from math import sqrt
 
-OEUIL = (150, 5, 90)
+OEUIL = (150, 0, 200)
 
 def distance(a, b):
     """calcule la distance entre le point a et b"""
@@ -48,6 +48,24 @@ def mettre_dans_l_ordre(points: list) -> list:
     
     return res
 
+def normalise_1d(L: list, depart = -10, arrivee = 10) -> list:
+    m = min(L)
+    M = max(L)
+    etendue = M - m
+    amplitude = arrivee - depart
+    return [(x - m) / etendue * amplitude + depart for x in L]
+    
+def normalise_3d(data: list) -> list:
+    x = normalise_1d([t[0] for t in data])
+    y = normalise_1d([t[1] for t in data])
+    z = normalise_1d([t[2] for t in data], 0, 100)
+    return [(x[i], y[i], z[i]) for i in range(len(data))]
+
+def normalise_durer(donnee: list) -> list:
+    x = normalise_1d([t[0] for t in donnee], 0, 800)
+    y = normalise_1d([t[1] for t in donnee], 600, 0)
+    return [(x[i], y[i], donnee[i][2]) for i in range(len(donnee))]
+    
 
 def charger_donnee(nom_fichier: str) -> list:
     """Charge les données du fichier nom_fichier"""
@@ -59,10 +77,11 @@ def charger_donnee(nom_fichier: str) -> list:
     for ligne in data_brut:
         j = ligne.split(", ")
         data.append((int(j[0]), int(j[1]), int(j[2])))
-    
+        
+    # on normalise les données
+    data = normalise_3d(data)
     # on les met dans l'ordre du plus loin au plus proches
     data = mettre_dans_l_ordre(data)
-    print(data)
     
     return data
 
@@ -108,5 +127,8 @@ def calculer_pos_points(points: list) -> list:
         couleur = bleu_vers_rouge(point[2])
 
         res.append((y, z, couleur))
+
+    # On les normalise pour la vitre
+    res = normalise_durer(res)
 
     return res
